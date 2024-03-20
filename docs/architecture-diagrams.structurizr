@@ -1,0 +1,51 @@
+workspace "C#dot NET C4-Model API to CICD Deployment" {
+
+    # Definition of the workspace
+    model {
+        user = person "Users" "A customer with a Free or Pro subscription" "Person"
+        
+        remindersSystem = softwareSystem "Reminders System" "Allows users to create reminder notes with a simple text and a due date." {
+
+            webApplication = container "Single-Page Application" "Allows the comunication between Users and API application" "TBD"
+            apiApplication = container "API Application" "Provide all  reminders functionalities with  through the HTTP protocol." "C#.NET" {
+
+                remindersController = component "Reminders Controller" "Allows users to set, fetch, modify and delete reminders" "C#.NET"
+                subscriptionsController = component "Subscriptions Controller" "Allows users to opt in to a given suscription plan" "C#.NET"
+                tokensController = component "Tokens Controller" "Allows users to sign in into the App" "C#.NET"
+            }
+        }
+        
+        # Relationships between users and software system
+        user -> remindersSystem "Manages reminders like a To-do app with a due date for each of the tasks"
+
+        # Relationships between users and containers
+        user -> webApplication "Logs into the Web App to manage reminders"
+        webApplication -> apiApplication "Makes requests to the API" "JSON/HTTPS"
+
+
+        webApplication -> remindersController "Makes requests to the API" "JSON/HTTPS"
+        webApplication -> tokensController "Makes requests to the API" "JSON/HTTPS"
+        webApplication -> subscriptionsController "Makes requests to the API" "JSON/HTTPS"
+        
+    }
+
+    views {
+        systemContext remindersSystem {
+            include *
+            autolayout tb
+        }
+
+        container remindersSystem {
+            include *
+            autolayout tb
+        }
+
+        component apiApplication {
+            include *
+            autolayout lr
+        }
+
+        theme default
+    }
+
+}
