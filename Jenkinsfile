@@ -257,7 +257,7 @@ pipeline {
             }
             when { expression { DEPLOY_ENVIRONMENT in ['test', 'main'] } }
             steps {
-                container(DOTNET_SDK_AGENT) {
+                container(DOCKER_AGENT) {
                     PrintHeader(['number': '8', 'title': 'Build and publish image'])
                     script {
                         // Construir la imagen del contenedor para el proyecto.
