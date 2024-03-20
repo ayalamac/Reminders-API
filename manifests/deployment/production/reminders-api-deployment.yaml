@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reminders-api
+  namespace: reminders-main
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: reminders-api
+      tier: backend
+      track: stable
+  template:
+    metadata:
+      labels:
+        app: reminders-api
+        tier: backend
+        track: stable
+    spec:
+      containers:
+      - name: reminders-api
+        image: ---CONTAINER_IMAGE_NAME---
+        ports:
+        - name: apiport
+          containerPort: 5001
+        resources: {
+          requests: { cpu: "250m", memory: "256Mi" },
+          limits: { cpu: "500m", memory: "512Mi" }
+        }
+
+      hostname: reminders-api
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: aks-pullfrom-dsoapps
+

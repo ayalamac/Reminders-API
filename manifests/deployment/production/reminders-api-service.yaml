@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: reminders-api-svc
+  name: reminders-api-svc
+  namespace: reminders-main
+spec:
+  ports:
+    - name: apiport
+      port: 80
+      targetPort: 5001
+      protocol: TCP
+  selector:
+    app: reminders-api
+    tier: backend
+status:
+  loadBalancer: {}
+

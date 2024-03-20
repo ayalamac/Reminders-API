@@ -21,6 +21,15 @@ pipeline {
         String DOCKER_AGENT = 'docker'
         String AZCLI_AGENT = 'azure-cli'
 
+          // Deploying to Azure Storage
+        String CLIENT_ID       = credentials('az-sp-client-id')
+        String CLIENT_SECRET   = credentials('az-sp-client-secret')
+        String SUBSCRIPTION_ID = credentials('az-subscription-id')
+        String TENANT_ID       = credentials('az-tenant-id')
+
+        String CLUSTER_RG   = 'AKS-LINGERIE'
+        String CLUSTER_NAME = 'AKS-LINGERIE-NP'
+
           // Project
         String APP_NAME              = 'Reminders-API'
         String PROJECT_NAME          = "${APP_NAME}"
@@ -78,9 +87,8 @@ pipeline {
                                 }
 
                                 Map currentEnvironment = [
-                                    'dev': 'Desarrollo',
-                                    'qa': 'Pruebas',
-                                    'main': 'Producción'
+                                    'test': 'Ambiente de Pruebas',
+                                    'main': 'Ambiente Productivo'
                                 ]
 
                                 contentReplace(
@@ -276,22 +284,56 @@ pipeline {
             }
         }
 
-        // stage('Deploy to K8s') {
-        //     // Desplegar el artefacto en el servidor.
-        //     agent {
-        //         kubernetes {
-        //             idleMinutes 1
-        //             yaml GetKubernetesPodYaml(['podName': AZCLI_AGENT])
-        //         }
-        //     }
-        //     when { expression { DEPLOY_ENVIRONMENT in ['test', 'main'] } }
-        //     steps {
-        //         PrintHeader(['number': '9', 'title': 'Deploy'])
-        //         script {
+        stage('Deploy to K8s') {
+            // Desplegar el artefacto en el servidor.
+            agent {
+                kubernetes {
+                    idleMinutes 1
+                    yaml GetKubernetesPodYaml(['podName': AZCLI_AGENT])
+                }
+            }
+            when { expression { DEPLOY_ENVIRONMENT in ['test', 'main'] } }
+            steps {
+                PrintHeader(['number': '9', 'title': 'Deploy'])
+                script {
+
+                    contentReplace(
+                        configs: [ 
+                            fileContentReplaceConfig(
+                                configs: [
+                                    fileContentReplaceItemConfig( search: '(---CONTAINER_IMAGE_NAME---)', replace: CONTAINER_IMAGE_NAME, matchCount: 1),
+                                ],
+                                fileEncoding: 'UTF-8', filePath: "manifests/deployment/production/reminders-api-deployment.yaml")
+                        ]
+                    )
+
+                    withCredentials([
+                        usernamePassword(credentialsId: "dsoacr", 
+                            usernameVariable: 'GIV_ACR_USERNAME',
+                            passwordVariable: 'GIV_ACR_PASSWORD')
+                    ]) {
+                        script {
+
+                            // * Install Azure CLI and Kubectl
+                            sh '''
+apt-get update && apt install curl -y
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+                            '''
+                            
+                            // * Login to Azure
+                            sh "az login --service-principal -u ${CLIENT_ID} -p ${CLIENT_SECRET} -t ${TENANT_ID}"
+                            sh "az account set --subscription ${SUBSCRIPTION_ID}"
+                            sh "az aks get-credentials --overwrite-existing --resource-group ${CLUSTER_RG} --name ${CLUSTER_NAME}"
+                            
+                            // * Deploy to AKS
+                            sh "kubectl apply -f manifests/deployment/production/. --namespace=reminders-main"
+                            // sh "kubectl apply -f configs/deploy/${DEPLOY_ENVIRONMENT}/. --namespace=${NAMESPACE}"
+                        }
                     
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
     }
 
     post {
