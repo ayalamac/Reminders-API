@@ -275,22 +275,22 @@ pipeline {
             }
         }
 
-        stage('Deploy to K8s') {
-            // Desplegar el artefacto en el servidor.
-            agent {
-                kubernetes {
-                    idleMinutes 1
-                    yaml GetKubernetesPodYaml(['podName': AZCLI_AGENT])
-                }
-            }
-            when { expression { DEPLOY_ENVIRONMENT in ['test', 'main'] } }
-            steps {
-                PrintHeader(['number': '9', 'title': 'Deploy'])
-                script {
+        // stage('Deploy to K8s') {
+        //     // Desplegar el artefacto en el servidor.
+        //     agent {
+        //         kubernetes {
+        //             idleMinutes 1
+        //             yaml GetKubernetesPodYaml(['podName': AZCLI_AGENT])
+        //         }
+        //     }
+        //     when { expression { DEPLOY_ENVIRONMENT in ['test', 'main'] } }
+        //     steps {
+        //         PrintHeader(['number': '9', 'title': 'Deploy'])
+        //         script {
                     
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
     }
 
     post {
