@@ -261,14 +261,14 @@ pipeline {
                     PrintHeader(['number': '8', 'title': 'Build and publish image'])
                     script {
                         // Construir la imagen del contenedor para el proyecto.
-                        CONTAINER_IMAGE_NAME = "${CONTAINER_REGISTRY_URL}/dso/${APP_NAME}-${DEPLOY_ENVIRONMENT}:${BUILD_NUMBER}"
-                        echo "Container image name: ${CONTAINER_IMAGE_NAME}"
-                        DOCKER_IMAGE = docker.build(CONTAINER_IMAGE_NAME, "-f ./${PROJECT_UI_FOLDER}/Dockerfile . --network=host")
+                        CONTAINER_IMAGE_NAME = "${CONTAINER_REGISTRY_URL}/dso/${APP_NAME}-${DEPLOY_ENVIRONMENT}"
+                        echo "Container image name and tag: ${CONTAINER_IMAGE_NAME}:${BUILD_NUMBER}"
+                        sh "buildah bud -t ${CONTAINER_IMAGE_NAME}:${BUILD_NUMBER} -f ${PROJECT_UI_FOLDER}/Dockerfile --network=host --isolation chroot ."
 
                         // Publicar la imagen del contenedor en el registro de contenedores.
                         docker.withRegistry("https://${CONTAINER_REGISTRY_URL}", "dsoacr") {
-                            DOCKER_IMAGE.push()
-                            DOCKER_IMAGE.push('latest')
+                            sh "buildah push ${CONTAINER_IMAGE_NAME}:${BUILD_NUMBER}"
+                            sh "buildah push ${CONTAINER_IMAGE_NAME}:latest"
                         }
                     }
                 }
