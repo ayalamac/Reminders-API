@@ -319,7 +319,7 @@ spec:
                         )
 
                         withCredentials([
-                            usernamePassword(credentialsId: "dsoacr")
+                            usernamePassword(credentialsId: "dsoacr", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                         ]) {
                             script {
 
