@@ -46,7 +46,7 @@ pipeline {
           // Destination
         String DEPLOY_ENVIRONMENT = "${BRANCH_NAME}"
         String TARGET_VERSION     = 'net8.0'
-        String TARGET_PLATFORM    = 'win-x64'
+        String TARGET_PLATFORM    = 'linux-musl-x64'
         String PUBLISH_PATH       = "${PROJECT_UI_FOLDER}/bin/Release/${TARGET_VERSION}/${TARGET_PLATFORM}/publish"
         CONTAINER_REGISTRY_URL    = 'dsoapps.azurecr.io'
         String ARTIFACT_NAME      = "reminders-api-artifact[${BRANCH_NAME.replaceAll('/', '-')}]#${BUILD_NUMBER}.zip"
