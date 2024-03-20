@@ -330,7 +330,7 @@ install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
                             sh "kubectl apply -f manifests/deployment/production/. --namespace=reminders-main"
                             // sh "kubectl apply -f configs/deploy/${DEPLOY_ENVIRONMENT}/. --namespace=${NAMESPACE}"
                         }
-                    
+                    }
                 }
             }
         }
