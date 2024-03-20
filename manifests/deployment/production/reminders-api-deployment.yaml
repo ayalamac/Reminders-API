@@ -27,7 +27,7 @@ spec:
         image: ---CONTAINER_IMAGE_NAME---
         ports:
         - name: apiport
-          containerPort: 5001
+          containerPort: 8080
         resources: {
           requests: { cpu: "250m", memory: "256Mi" },
           limits: { cpu: "2500m", memory: "2560Mi" }
