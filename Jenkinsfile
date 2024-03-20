@@ -305,7 +305,7 @@ spec:
             when { expression { DEPLOY_ENVIRONMENT in ['test', 'main'] } }
             steps {
                 PrintHeader(['number': '9', 'title': 'Deploy'])
-                container(ubuntu) {
+                container('ubuntu') {
                     script {
 
                         contentReplace(
