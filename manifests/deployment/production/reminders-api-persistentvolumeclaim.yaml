@@ -2,8 +2,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    io.kompose.service: api-claim0
-  name: reminders-api-claim0
+    io.kompose.service: reminders-api-claim
+  name: reminders-api-claim
 spec:
   accessModes:
     - ReadWriteOnce

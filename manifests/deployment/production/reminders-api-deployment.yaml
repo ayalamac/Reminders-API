@@ -38,8 +38,12 @@ spec:
             }
           volumeMounts:
             - mountPath: /app/CleanArchitecture.sqlite
-              name: reminders-api-claim0
+              name: reminders-api-claim
+      volumes:
+        - name: reminders-api-claim
+          persistentVolumeClaim:
+            claimName: reminders-api-claim
       hostname: reminders-api
-      restartPolicy: OnFailure
+      restartPolicy: Always
       imagePullSecrets:
       - name: aks-pullfrom-dsoapps
