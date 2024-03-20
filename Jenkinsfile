@@ -232,7 +232,6 @@ pipeline {
         stage('Publish project') {
             // Compilar y publicar el proyecto para tener disponible el artefacto.
             // when { expression { DEPLOY_ENVIRONMENT in ['dev', 'qa', 'main'] } }
-            when { expression { return false } }
             environment {
                 String PUBLISH_MODE = 'Release'
             }
@@ -242,15 +241,6 @@ pipeline {
                     script {
                         dir (PROJECT_UI_FOLDER) {
                             sh "dotnet publish -c ${PUBLISH_MODE} -r ${TARGET_PLATFORM} --self-contained false"
-                        }
-
-                        if (DEPLOY_ENVIRONMENT in ['main']) {
-                            sh "apk update && apk upgrade && apk add --no-cache git"
-                            String latestReleaseVersion = "v${GetAppVersionFromBranch()}"
-                            Number repositoryId         = GetGitlabRepositoryId(['projectName': PROJECT_NAME])
-                            CreateTagInGitlabRepository(['repositoryId': repositoryId, 'ref': 'main', 'tagName': latestReleaseVersion])
-
-                            SendNotificationToDynatrace(['event': 'BUILD_FINISHED', 'entityId': "${DYNATRACE_PGI_ENTITY}", 'releaseVersion': latestReleaseVersion])
                         }
                     }
                 }
