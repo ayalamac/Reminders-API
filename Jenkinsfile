@@ -261,7 +261,8 @@ pipeline {
                     PrintHeader(['number': '8', 'title': 'Build and publish image'])
                     script {
                         // Construir la imagen del contenedor para el proyecto.
-                        CONTAINER_IMAGE_NAME = "${CONTAINER_REGISTRY_URL}/dso/${APP_NAME}-${DEPLOY_ENVIRONMENT}".toLowerCase()
+                        CONTAINER_IMAGE_NAME = "${CONTAINER_REGISTRY_URL}/dso/${APP_NAME}-${DEPLOY_ENVIRONMENT}"
+                        CONTAINER_IMAGE_NAME = CONTAINER_IMAGE_NAME.toLowerCase()
                         echo "Container image name and tag: ${CONTAINER_IMAGE_NAME}:${BUILD_NUMBER}"
                         sh "buildah bud -t ${CONTAINER_IMAGE_NAME}:${BUILD_NUMBER} -f ${PROJECT_UI_FOLDER}/Dockerfile --network=host --isolation chroot ."
 
