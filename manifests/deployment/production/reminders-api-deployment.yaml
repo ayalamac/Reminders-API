@@ -27,7 +27,7 @@ spec:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
           image: ---CONTAINER_IMAGE_NAME---
-          name: clean-architecture-api
+          name: reminders-api
           ports:
             - containerPort: 5001
               hostPort: 5001
@@ -39,8 +39,7 @@ spec:
           volumeMounts:
             - mountPath: /app/CleanArchitecture.sqlite
               name: reminders-api-claim0
-
-  hostname: reminders-api
-  restartPolicy: OnFailure
-  imagePullSecrets:
-  - name: aks-pullfrom-dsoapps
+      hostname: reminders-api
+      restartPolicy: OnFailure
+      imagePullSecrets:
+      - name: aks-pullfrom-dsoapps
