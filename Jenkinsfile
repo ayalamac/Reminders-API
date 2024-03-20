@@ -261,7 +261,7 @@ pipeline {
                     PrintHeader(['number': '8', 'title': 'Build and publish image'])
                     script {
                         // Construir la imagen del contenedor para el proyecto.
-                        CONTAINER_IMAGE_NAME = "${CONTAINER_REGISTRY_URL}/dso/${APP_NAME}-${DEPLOY_ENVIRONMENT}"
+                        CONTAINER_IMAGE_NAME = "${CONTAINER_REGISTRY_URL}/dso/${APP_NAME}-${DEPLOY_ENVIRONMENT}".toLowerCase()
                         echo "Container image name and tag: ${CONTAINER_IMAGE_NAME}:${BUILD_NUMBER}"
                         sh "buildah bud -t ${CONTAINER_IMAGE_NAME}:${BUILD_NUMBER} -f ${PROJECT_UI_FOLDER}/Dockerfile --network=host --isolation chroot ."
 
@@ -275,25 +275,22 @@ pipeline {
             }
         }
 
-        // stage('Deploy to K8s') {
-        //     // Desplegar el artefacto en el servidor.
-        //     agent {
-        //         kubernetes {
-        //             idleMinutes 1
-        //             yaml GetKubernetesPodYaml(['podName': AZCLI_AGENT])
-        //         }
-        //     }
-        //     when { expression { DEPLOY_ENVIRONMENT in ['dev', 'qa'] } }
-        //     environment {
-                
-        //     }
-        //     steps {
-        //         PrintHeader(['number': '9', 'title': 'Deploy'])
-        //         script {
+        stage('Deploy to K8s') {
+            // Desplegar el artefacto en el servidor.
+            agent {
+                kubernetes {
+                    idleMinutes 1
+                    yaml GetKubernetesPodYaml(['podName': AZCLI_AGENT])
+                }
+            }
+            when { expression { DEPLOY_ENVIRONMENT in ['test', 'main'] } }
+            steps {
+                PrintHeader(['number': '9', 'title': 'Deploy'])
+                script {
                     
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
     }
 
     post {
