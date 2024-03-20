@@ -18,7 +18,7 @@ spec:
           service:
             name: reminders-api-svc
             port:
-              number: 80
+              number: 5001
         path: /reminders/(.*)
         pathType: Prefix
   tls:

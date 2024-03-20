@@ -23,18 +23,24 @@ spec:
         track: stable
     spec:
       containers:
-      - name: reminders-api
-        image: ---CONTAINER_IMAGE_NAME---
-        ports:
-        - name: apiport
-          containerPort: 8080
-        resources: {
-          requests: { cpu: "250m", memory: "256Mi" },
-          limits: { cpu: "2500m", memory: "2560Mi" }
-        }
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+          image: ---CONTAINER_IMAGE_NAME---
+          name: clean-architecture-api
+          ports:
+            - containerPort: 5001
+              hostPort: 5001
+              protocol: TCP
+          resources: {
+              requests: { cpu: "250m", memory: "256Mi" },
+              limits: { cpu: "2500m", memory: "2560Mi" }
+            }
+          volumeMounts:
+            - mountPath: /app/CleanArchitecture.sqlite
+              name: reminders-api-claim0
 
-      hostname: reminders-api
-      restartPolicy: Always
-      imagePullSecrets:
-      - name: aks-pullfrom-dsoapps
-
+  hostname: reminders-api
+  restartPolicy: OnFailure
+  imagePullSecrets:
+  - name: aks-pullfrom-dsoapps
