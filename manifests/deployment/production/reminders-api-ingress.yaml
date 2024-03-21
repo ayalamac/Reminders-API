@@ -20,7 +20,7 @@ spec:
             port:
               number: 5001
         path: /reminders/(.*)
-        pathType: Prefix
+        pathType: ImplementationSpecific
   tls:
   - hosts:
     - pdnazure.serviciosit.co
