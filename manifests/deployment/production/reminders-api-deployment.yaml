@@ -33,8 +33,8 @@ spec:
               hostPort: 5001
               protocol: TCP
           resources: {
-              requests: { cpu: "250m", memory: "256Mi" },
-              limits: { cpu: "2500m", memory: "2560Mi" }
+              requests: { cpu: "5m", memory: "64Mi" },
+              limits: { cpu: "100m", memory: "256Mi" }
             }
           volumeMounts:
             - mountPath: /app/CleanArchitecture.sqlite
