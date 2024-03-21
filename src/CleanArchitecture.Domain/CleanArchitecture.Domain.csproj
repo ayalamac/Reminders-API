@@ -1,16 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk = "Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RuntimeIdentifier>linux-musl-x64</RuntimeIdentifier>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.SmartEnum" />
-    <PackageReference Include="ErrorOr" />
-    <PackageReference Include="MediatR" />
-    <PackageReference Include="throw" />
+    <PackageReference Include = "Ardalis.SmartEnum" />
+    <PackageReference Include = "ErrorOr" />
+    <PackageReference Include = "MediatR" />
+    <PackageReference Include = "throw" />
   </ItemGroup>
 
 </Project>

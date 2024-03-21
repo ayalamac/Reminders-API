@@ -1,28 +1,32 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk = "Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <Nullable>enable</Nullable>
+    <RuntimeIdentifier>linux-musl-x64</RuntimeIdentifier>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio">
+    <PackageReference Include = "FluentAssertions" />
+    <PackageReference Include = "Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include = "Microsoft.NET.Test.Sdk" />
+    <PackageReference Include = "xunit" />
+    <PackageReference Include = "xunit.runner.visualstudio">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector">
+    <PackageReference Include = "coverlet.collector">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CleanArchitecture.Api\CleanArchitecture.Api.csproj" />
-    <ProjectReference Include="..\TestCommon\TestCommon.csproj" />
+    <ProjectReference Include = "..\..\src\CleanArchitecture.Api\CleanArchitecture.Api.csproj" />
+    <ProjectReference Include = "..\TestCommon\TestCommon.csproj" />
   </ItemGroup>
 
 </Project>
