@@ -112,130 +112,130 @@ pipeline {
         }
 
         
-        // stage('Run security checks') {
-        //     // Ejecutar pruebas y controles de seguridad para garantizar la integridad del código.
-        //     parallel {
-        //         stage('Git leaks'){
-        //             // Realizar una búsqueda en el código fuente para encontrar posibles fugas de información en el repositorio Git.
-        //             steps {
-        //                 PrintHeader(['number': '3', 'title': 'SECURITY TOOL 1 - Git Leaks Check'])
-        //                 build job: "GitLeaks.Tool",
-        //                     parameters: [
-        //                         string(name: 'PROJECT_GIT_URL', value: "${GIT_URL}"),
-        //                         string(name: 'PROJECT_BRANCH_NAME', value: "${BRANCH_NAME}")
-        //                     ],
-        //                     propagate : true
-        //             }
-        //         }
+        stage('Run security checks') {
+            // Ejecutar pruebas y controles de seguridad para garantizar la integridad del código.
+            parallel {
+                stage('Git leaks'){
+                    // Realizar una búsqueda en el código fuente para encontrar posibles fugas de información en el repositorio Git.
+                    steps {
+                        PrintHeader(['number': '3', 'title': 'SECURITY TOOL 1 - Git Leaks Check'])
+                        build job: "GitLeaks.Tool",
+                            parameters: [
+                                string(name: 'PROJECT_GIT_URL', value: "${GIT_URL}"),
+                                string(name: 'PROJECT_BRANCH_NAME', value: "${BRANCH_NAME}")
+                            ],
+                            propagate : true
+                    }
+                }
 
-        //         stage('OWASP Dependency Check') {
-        //             // Verificar si hay dependencias vulnerables que pueden afectar la seguridad del proyecto.
-        //             agent {
-        //                 kubernetes {
-        //                     idleMinutes 1
-        //                     yaml GetKubernetesPodYaml(['podName': 'owasp-dependency-check'])
-        //                 }
-        //             }
-        //             steps {
-        //                 container('owasp-dependency-check') {
-        //                     PrintHeader(['number': '3', 'title': 'SECURITY TOOL 2 - OWASP Dependency Check'])
-        //                     script{
-        //                         RunDependencyCheck(['validateCache': true])
-        //                     }
-        //                 }
-        //             }
-        //         }
+                stage('OWASP Dependency Check') {
+                    // Verificar si hay dependencias vulnerables que pueden afectar la seguridad del proyecto.
+                    agent {
+                        kubernetes {
+                            idleMinutes 1
+                            yaml GetKubernetesPodYaml(['podName': 'owasp-dependency-check'])
+                        }
+                    }
+                    steps {
+                        container('owasp-dependency-check') {
+                            PrintHeader(['number': '3', 'title': 'SECURITY TOOL 2 - OWASP Dependency Check'])
+                            script{
+                                RunDependencyCheck(['validateCache': true])
+                            }
+                        }
+                    }
+                }
 
-        //         stage('SBOM for Dependency Track') {
-        //             // Crear un inventario de software que se utiliza en el proyecto.
-        //             steps {
-        //                 PrintHeader(['number': '3', 'title': 'SECURITY TOOL 3 - Dependency Track - SBOM Creation and Publishing'])
-        //                 build job: "DependencyTrack-DotNET.Tool",
-        //                     parameters: [
-        //                         string(name: 'PROJECT_NAME', value: "${PROJECT_NAME}"),
-        //                         string(name: 'PROJECT_GIT_URL', value: "${GIT_URL}")
-        //                     ],
-        //                     wait: false,
-        //                     propagate : false
-        //             }
-        //         }
-        //     }
-        // }
+                stage('SBOM for Dependency Track') {
+                    // Crear un inventario de software que se utiliza en el proyecto.
+                    steps {
+                        PrintHeader(['number': '3', 'title': 'SECURITY TOOL 3 - Dependency Track - SBOM Creation and Publishing'])
+                        build job: "DependencyTrack-DotNET.Tool",
+                            parameters: [
+                                string(name: 'PROJECT_NAME', value: "${PROJECT_NAME}"),
+                                string(name: 'PROJECT_GIT_URL', value: "${GIT_URL}")
+                            ],
+                            wait: false,
+                            propagate : false
+                    }
+                }
+            }
+        }
 
-        // stage('Tests Suite') {
-        //     // Ejecutar pruebas unitarias y de integración para garantizar la calidad del desarrollo.
-        //     parallel {
-        //         stage('Unit Tests - Domain') {
-        //             // Ejecutar pruebas unitarias.
-        //             steps {
-        //                 container(DOTNET_SDK_AGENT) {
-        //                     PrintHeader(['number': '4', 'title': 'Unit tests - Domain'])
-        //                     dir (UNIT_TESTS_DOMAIN_FOLDER) {
-        //                         sh "dotnet test --no-build"
-        //                     }
-        //                 }
-        //             }
-        //         }
+        stage('Tests Suite') {
+            // Ejecutar pruebas unitarias y de integración para garantizar la calidad del desarrollo.
+            parallel {
+                stage('Unit Tests - Domain') {
+                    // Ejecutar pruebas unitarias.
+                    steps {
+                        container(DOTNET_SDK_AGENT) {
+                            PrintHeader(['number': '4', 'title': 'Unit tests - Domain'])
+                            dir (UNIT_TESTS_DOMAIN_FOLDER) {
+                                sh "dotnet test --no-build"
+                            }
+                        }
+                    }
+                }
 
-        //         stage('Unit Tests - Application') {
-        //             // Ejecutar pruebas unitarias.
-        //             steps {
-        //                 container(DOTNET_SDK_AGENT) {
-        //                     PrintHeader(['number': '4', 'title': 'Unit tests - Application'])
-        //                     dir (UNIT_TESTS_APPLICATION_FOLDER) {
-        //                         sh "dotnet test --no-build"
-        //                     }
-        //                 }
-        //             }
-        //         }
+                stage('Unit Tests - Application') {
+                    // Ejecutar pruebas unitarias.
+                    steps {
+                        container(DOTNET_SDK_AGENT) {
+                            PrintHeader(['number': '4', 'title': 'Unit tests - Application'])
+                            dir (UNIT_TESTS_APPLICATION_FOLDER) {
+                                sh "dotnet test --no-build"
+                            }
+                        }
+                    }
+                }
 
-        //         stage('Subcutaneous Tests - Application') {
-        //             // Ejecutar pruebas subcutáneas.
-        //             steps {
-        //                 container(DOTNET_SDK_AGENT) {
-        //                     PrintHeader(['number': '4', 'title': 'Subcutaneous Tests - Application'])
-        //                     dir (SUBCUTANEOUS_TESTS_FOLDER) {
-        //                         sh "dotnet test --no-build"
-        //                     }
-        //                 }
-        //             }
-        //         }
+                stage('Subcutaneous Tests - Application') {
+                    // Ejecutar pruebas subcutáneas.
+                    steps {
+                        container(DOTNET_SDK_AGENT) {
+                            PrintHeader(['number': '4', 'title': 'Subcutaneous Tests - Application'])
+                            dir (SUBCUTANEOUS_TESTS_FOLDER) {
+                                sh "dotnet test --no-build"
+                            }
+                        }
+                    }
+                }
 
-        //         stage('Integration Tests - Application') {
-        //             // Ejecutar pruebas subcutáneas.
-        //             steps {
-        //                 container(DOTNET_SDK_AGENT) {
-        //                     PrintHeader(['number': '4', 'title': 'Integration Tests - Application'])
-        //                     dir (INTEGRATION_TESTS_FOLDER) {
-        //                         sh "dotnet test --no-build"
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+                stage('Integration Tests - Application') {
+                    // Ejecutar pruebas subcutáneas.
+                    steps {
+                        container(DOTNET_SDK_AGENT) {
+                            PrintHeader(['number': '4', 'title': 'Integration Tests - Application'])
+                            dir (INTEGRATION_TESTS_FOLDER) {
+                                sh "dotnet test --no-build"
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-        // stage('Sonarqube (SAST)') {
-        //     // Configurar el proyecto en Sonarqube con el nivel de calidad requerido.
-        //     // Realizar un análisis estático de seguridad del código y un análisis de calidad utilizando Sonarqube.
-        //     steps {
-        //         container(DOTNET_SDK_AGENT) {
-        //             PrintHeader(['number': '5', 'title': 'Static Application Security Testing (SAST) - Sonarqube'])
-        //             SetupSonarProject(['projectName': PROJECT_NAME, 'technology': TARGET_VERSION,  'qualityGateTier': SONAR_QUALITY_LEVEL])
-        //             RunSonarForDotnet(['projectName': PROJECT_NAME, 'solutionName': SOLUTION_NAME, 'branchName': BRANCH_NAME])
-        //         }
-        //     }
-        // }
+        stage('Sonarqube (SAST)') {
+            // Configurar el proyecto en Sonarqube con el nivel de calidad requerido.
+            // Realizar un análisis estático de seguridad del código y un análisis de calidad utilizando Sonarqube.
+            steps {
+                container(DOTNET_SDK_AGENT) {
+                    PrintHeader(['number': '5', 'title': 'Static Application Security Testing (SAST) - Sonarqube'])
+                    SetupSonarProject(['projectName': PROJECT_NAME, 'technology': TARGET_VERSION,  'qualityGateTier': SONAR_QUALITY_LEVEL])
+                    RunSonarForDotnet(['projectName': PROJECT_NAME, 'solutionName': SOLUTION_NAME, 'branchName': BRANCH_NAME])
+                }
+            }
+        }
 
-        // stage('Sonarqube result') {
-        //     // Analizar los resultados de Sonarqube y tomar medidas para mejorar la seguridad del proyecto.
-        //     steps {
-        //         container(DOTNET_SDK_AGENT) {
-        //             PrintHeader(['number': '6', 'title': 'Sonarqube result'])
-        //             AssessSonarQualityCheck()
-        //         }
-        //     }
-        // }
+        stage('Sonarqube result') {
+            // Analizar los resultados de Sonarqube y tomar medidas para mejorar la seguridad del proyecto.
+            steps {
+                container(DOTNET_SDK_AGENT) {
+                    PrintHeader(['number': '6', 'title': 'Sonarqube result'])
+                    AssessSonarQualityCheck()
+                }
+            }
+        }
 
         stage('Publish project') {
             // Compilar y publicar el proyecto para tener disponible el artefacto.

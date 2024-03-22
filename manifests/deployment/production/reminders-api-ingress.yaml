@@ -11,17 +11,17 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: pdnazure.serviciosit.co
+  - host: testazure.serviciosit.co
     http:
       paths:
       - backend:
           service:
             name: reminders-api-svc
             port:
-              number: 5001
+              number: 8080
         path: /reminders/(.*)
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - pdnazure.serviciosit.co
+    - testazure.serviciosit.co
     secretName: tls-certificate
