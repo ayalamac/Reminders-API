@@ -271,8 +271,7 @@ pipeline {
                         // Construir la imagen del contenedor para el proyecto.
                         CONTAINER_IMAGE_NAME = "${CONTAINER_REGISTRY_URL}/dso/${APP_NAME.toLowerCase()}-${DEPLOY_ENVIRONMENT}"
                         echo "Container image name and tag: ${CONTAINER_IMAGE_NAME}:${BUILD_NUMBER}"
-                        sh "buildah bud -t ${CONTAINER_IMAGE_NAME}:${BUILD_NUMBER} -f ./Dockerfile --network=host --isolation chroot ."
-                        sh "buildah bud -t ${CONTAINER_IMAGE_NAME}:latest -f Dockerfile --network=host --isolation chroot ."
+                        sh "buildah bud -t ${CONTAINER_IMAGE_NAME}:${BUILD_NUMBER} -t ${CONTAINER_IMAGE_NAME}:latest -f ./Dockerfile --network=host --isolation chroot ."
 
                         // Publicar la imagen del contenedor en el registro de contenedores.
                         docker.withRegistry("https://${CONTAINER_REGISTRY_URL}", "dsoacr") {
