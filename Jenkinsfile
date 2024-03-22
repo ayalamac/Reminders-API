@@ -19,7 +19,7 @@ pipeline {
           // Agents
         String DOTNET_SDK_AGENT = 'dotnet-sdk-8'
         String DOCKER_AGENT = 'docker'
-        String AZCLI_AGENT = 'azure-cli'
+        String AZCLI_AGENT = 'azure-cli-ubuntu'
 
           // Deploying to Azure Storage
         String CLIENT_ID       = credentials('az-sp-client-id')
@@ -288,24 +288,14 @@ pipeline {
             // Desplegar el artefacto en el servidor.
             agent {
                 kubernetes {
-                    idleMinutes 2
-                    yaml """
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: 'ubuntu'
-    image: 'ubuntu:22.04'
-    tty: true
-    command: 
-    - cat
-            """
+                    idleMinutes 1
+                    yaml GetKubernetesPodYaml(['podName': AZCLI_AGENT])
                 }
             }
             when { expression { DEPLOY_ENVIRONMENT in ['test', 'main'] } }
             steps {
                 PrintHeader(['number': '9', 'title': 'Deploy'])
-                container('ubuntu') {
+                container(AZCLI_AGENT) {
                     script {
 
                         contentReplace(
@@ -314,7 +304,7 @@ spec:
                                     configs: [
                                         fileContentReplaceItemConfig( search: '(---CONTAINER_IMAGE_NAME---)', replace: "${CONTAINER_IMAGE_NAME}:${BUILD_NUMBER}", matchCount: 1),
                                     ],
-                                    fileEncoding: 'UTF-8', filePath: "manifests/deployment/production/reminders-api-deployment.yaml")
+                                    fileEncoding: 'UTF-8', filePath: "manifests/deployment/test/reminders-api-deployment.yaml")
                             ]
                         )
 
@@ -322,23 +312,13 @@ spec:
                             usernamePassword(credentialsId: "dsoacr", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                         ]) {
                             script {
-
-                                // * Install Azure CLI and Kubectl
-                                sh '''
-apt-get update && apt install curl -y
-curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-                                '''
-                                
                                 // * Login to Azure
                                 sh "az login --service-principal -u ${CLIENT_ID} -p ${CLIENT_SECRET} -t ${TENANT_ID}"
                                 sh "az account set --subscription ${SUBSCRIPTION_ID}"
                                 sh "az aks get-credentials --overwrite-existing --resource-group ${CLUSTER_RG} --name ${CLUSTER_NAME}"
                                 
                                 // * Deploy to AKS
-                                sh "kubectl apply -f manifests/deployment/production/. --namespace=reminders-main"
-                                // sh "kubectl apply -f configs/deploy/${DEPLOY_ENVIRONMENT}/. --namespace=${NAMESPACE}"
+                                sh "kubectl apply -f manifests/deployment/test/. --namespace=reminders-main"
                             }
                         }
                     }
