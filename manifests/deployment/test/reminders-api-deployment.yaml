@@ -34,7 +34,7 @@ spec:
               protocol: TCP
           resources: {
               requests: { cpu: "5m", memory: "64Mi" },
-              limits: { cpu: "100m", memory: "256Mi" }
+              limits: { cpu: "500m", memory: "1024Mi" }
             }
           volumeMounts:
             - mountPath: /app/CleanArchitecture.sqlite
