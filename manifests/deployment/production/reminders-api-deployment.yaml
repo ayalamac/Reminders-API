@@ -8,8 +8,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 40%
-      maxSurge: 2
+      maxUnavailable: 67%
+      maxSurge: 1
   selector:
     matchLabels:
       app: reminders-api
