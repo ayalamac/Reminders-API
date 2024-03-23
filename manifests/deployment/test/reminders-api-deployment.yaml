@@ -26,6 +26,8 @@ spec:
         - env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
+            - name: SWAGGER_PREFIX
+              value: "reminders"
           image: ---CONTAINER_IMAGE_NAME---
           name: reminders-api
           ports:

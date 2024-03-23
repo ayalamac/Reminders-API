@@ -2,31 +2,36 @@ using CleanArchitecture.Api;
 using CleanArchitecture.Application;
 using CleanArchitecture.Infrastructure;
 
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
-{
-    builder.Services
-        .AddPresentation(builder.Configuration)
-        .AddApplication()
-        .AddInfrastructure(builder.Configuration);
-}
+
+builder.Services
+    .AddPresentation(builder.Configuration)
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
 
 string currentEnvironment = builder.Configuration["CICD:CurrentEnvironment"]!;
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseInfrastructure();
+
+app.UseSwagger(options =>
 {
-    app.UseExceptionHandler();
-    app.UseInfrastructure();
+    string prefix = $"{Environment.GetEnvironmentVariable("SWAGGER_PREFIX")}";
+    prefix = string.IsNullOrEmpty(prefix) ? string.Empty : $"/{prefix}";
+    options.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+        swaggerDoc.Servers = [new OpenApiServer { Url = $"https://{httpReq.Host.Value}{prefix}" }]);
+});
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("v1/swagger.json", $"Reminders API ({currentEnvironment})");
+});
 
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("../swagger/v1/swagger.json", $"Reminders API ({currentEnvironment})");
-        options.RoutePrefix = "swagger";
-    });
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
 
-    app.UseHttpsRedirection();
-    app.UseAuthorization();
-    app.MapControllers();
-
-    app.Run();
-}
+app.Run();
