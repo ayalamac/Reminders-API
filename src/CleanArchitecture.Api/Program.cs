@@ -26,9 +26,7 @@ app.UseSwagger(options =>
         swaggerDoc.Servers = [new OpenApiServer { Url = $"https://{httpReq.Host.Value}{prefix}" }]);
 });
 app.UseSwaggerUI(options =>
-{
-    options.SwaggerEndpoint("v1/swagger.json", $"Reminders API ({currentEnvironment})");
-});
+    options.SwaggerEndpoint("v1/swagger.json", $"Reminders API ({currentEnvironment})"));
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

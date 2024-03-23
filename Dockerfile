@@ -20,6 +20,6 @@ RUN apt-get update && apt-get install -y libsqlite3-dev
 ENV ASPNETCORE_HTTP_PORTS=5001
 EXPOSE 5001
 WORKDIR /app
+COPY src/CleanArchitecture.Api/appsettings.json .
 COPY --from=publish /app/publish .
-COPY ["src/CleanArchitecture.Api/appsettings.json", "./"]
 ENTRYPOINT ["dotnet", "CleanArchitecture.Api.dll"]

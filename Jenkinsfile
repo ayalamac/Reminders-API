@@ -21,6 +21,9 @@ pipeline {
         String DOCKER_AGENT = 'docker'
         String AZCLI_AGENT = 'azure-cli-ubuntu'
 
+          // Notifications
+        String GCHAT_NOTIFICATIONS_URL = credentials('chat-cicd-2024')
+
           // Deploying to Azure Storage
         String CLIENT_ID       = credentials('az-sp-client-id')
         String CLIENT_SECRET   = credentials('az-sp-client-secret')
