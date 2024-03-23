@@ -5,10 +5,12 @@ using CleanArchitecture.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services
-        .AddPresentation()
+        .AddPresentation(builder.Configuration)
         .AddApplication()
         .AddInfrastructure(builder.Configuration);
 }
+
+string currentEnvironment = builder.Configuration["CICD:CurrentEnvironment"]!;
 
 var app = builder.Build();
 {
@@ -16,7 +18,11 @@ var app = builder.Build();
     app.UseInfrastructure();
 
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", $"Reminders API ({currentEnvironment})");
+        options.RoutePrefix = "reminders/swagger";
+    });
 
     app.UseHttpsRedirection();
     app.UseAuthorization();

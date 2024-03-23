@@ -1,5 +1,5 @@
-// * PoC CICD - Reminders-API
-// * ************************************************************* //
+// * PoC CICD - Reminders-API Demo Project
+// * ************************************* //
 
 //   Authors:
 //   Sara Herrera       - sherrerar2@eafit.edu.co
@@ -76,14 +76,12 @@ pipeline {
                 // TODO : Configurar texto de ambientes
                 stage('Update settings') {
                     // Actualizar las configuraciones necesarias antes de la compilación.
-                    when { expression { return false } }
-                    // when { expression { BRANCH_NAME in ['dev', 'qa', 'main', MAINTENANCE_BRANCH] } }
                     steps{
                         container(DOTNET_SDK_AGENT) {
                             PrintHeader(['number': '2', 'title': 'Update settings'])
                             script{
-                                if (BRANCH_NAME == MAINTENANCE_BRANCH) {
-                                    DEPLOY_ENVIRONMENT = 'dev'
+                                if (BRANCH_NAME == 'main') {
+                                    DEPLOY_ENVIRONMENT = 'test'
                                 }
 
                                 Map currentEnvironment = [
@@ -100,8 +98,6 @@ pipeline {
                                             fileEncoding: 'UTF-8', filePath: "${PROJECT_UI_FOLDER}/appsettings.json")
                                     ]
                                 )
-
-                                
                             }
                         }
                     }
