@@ -11,8 +11,6 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 
-string currentEnvironment = builder.Configuration["CICD:CurrentEnvironment"]!;
-
 var app = builder.Build();
 
 app.UseExceptionHandler();
@@ -26,7 +24,7 @@ app.UseSwagger(options =>
         swaggerDoc.Servers = [new OpenApiServer { Url = $"https://{httpReq.Host.Value}{prefix}" }]);
 });
 app.UseSwaggerUI(options =>
-    options.SwaggerEndpoint("v1/swagger.json", $"Reminders API ({currentEnvironment})"));
+    options.SwaggerEndpoint("v1/swagger.json", $"Reminders API"));
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
