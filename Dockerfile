@@ -21,4 +21,5 @@ ENV ASPNETCORE_HTTP_PORTS=5001
 EXPOSE 5001
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY ["src/CleanArchitecture.Api/appsettings.json", "./"]
 ENTRYPOINT ["dotnet", "CleanArchitecture.Api.dll"]
