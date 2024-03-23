@@ -35,13 +35,6 @@ spec:
               requests: { cpu: "5m", memory: "64Mi" },
               limits: { cpu: "500m", memory: "1024Mi" }
             }
-          volumeMounts:
-            - mountPath: /app/CleanArchitecture.sqlite
-              name: reminders-api-claim
-      volumes:
-        - name: reminders-api-claim
-          persistentVolumeClaim:
-            claimName: reminders-api-claim
       hostname: reminders-api
       restartPolicy: Always
       imagePullSecrets:
