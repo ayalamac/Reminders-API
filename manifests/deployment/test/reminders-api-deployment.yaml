@@ -30,7 +30,6 @@ spec:
           name: reminders-api
           ports:
             - containerPort: 5001
-              hostPort: 5001
               protocol: TCP
           resources: {
               requests: { cpu: "5m", memory: "64Mi" },
