@@ -30,7 +30,7 @@ public static class DependencyInjection
             .AddBackgroundServices(configuration)
             .AddAuthentication(configuration)
             .AddAuthorization()
-            .AddPersistence();
+            .AddPersistence(configuration);
 
         return services;
     }
@@ -76,9 +76,13 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddPersistence(this IServiceCollection services)
+    private static IServiceCollection AddPersistence(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source = CleanArchitecture.sqlite"));
+        // services.AddDbContext<AppDbContext>(options =>
+        // options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source = ./CleanArchitecture.sqlite"));
 
         services.AddScoped<IRemindersRepository, RemindersRepository>();
         services.AddScoped<IUsersRepository, UsersRepository>();
