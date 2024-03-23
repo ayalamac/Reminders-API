@@ -4,12 +4,12 @@ metadata:
   name: reminders-api
   namespace: reminders-main
 spec:
-  replicas: 1
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 50%
-      maxSurge: 1
+      maxUnavailable: 67%
+      maxSurge: 2
   selector:
     matchLabels:
       app: reminders-api
