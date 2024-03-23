@@ -4,6 +4,7 @@
     <IsPackable>true</IsPackable>
     <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>36d3aabc-1075-47d7-9b3b-c1feebf8f3bd</UserSecretsId>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
   <ItemGroup>
