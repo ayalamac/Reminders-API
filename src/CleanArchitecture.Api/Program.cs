@@ -20,7 +20,7 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", $"Reminders API ({currentEnvironment})");
+        options.SwaggerEndpoint("../swagger/v1/swagger.json", $"Reminders API ({currentEnvironment})");
         options.RoutePrefix = "swagger";
     });
 

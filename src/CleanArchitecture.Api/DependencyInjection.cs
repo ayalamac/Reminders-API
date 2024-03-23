@@ -33,6 +33,11 @@ public static class DependencyInjection
                     }, new List<string>()
                 },
             });
+
+            options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            options.IgnoreObsoleteActions();
+            options.IgnoreObsoleteProperties();
+            options.CustomSchemaIds(type => type.FullName);
         });
         services.AddProblemDetails();
 
