@@ -93,7 +93,7 @@ pipeline {
                                     configs: [ 
                                         fileContentReplaceConfig(
                                             configs: [
-                                                fileContentReplaceItemConfig( search: '(Local)', replace: currentEnvironment[DEPLOY_ENVIRONMENT], matchCount: 1),
+                                                fileContentReplaceItemConfig( search: '(Local)', replace: 'Ambiente de Pruebas', matchCount: 1),
                                             ],
                                             fileEncoding: 'UTF-8', filePath: "${PROJECT_UI_FOLDER}/appsettings.json")
                                     ]
