@@ -4,7 +4,7 @@ metadata:
   name: reminders-api
   namespace: reminders-main
 spec:
-  replicas: 1
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
